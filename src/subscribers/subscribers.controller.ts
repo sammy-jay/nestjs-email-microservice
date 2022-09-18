@@ -7,17 +7,17 @@ import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 export class SubscribersController {
   constructor(private readonly subscribersService: SubscribersService) {}
 
-  // @MessagePattern({ cmd: 'add-subscriber' })
-  // async addSubscriber(@Payload() subscriber: CreateSubscriberDto) {
-  //   console.log('Add Sub called...');
-  //   return await this.subscribersService.addSubscriber(subscriber);
-  // }
-
-  @EventPattern({ cmd: 'add-subscriber' })
+  @MessagePattern({ cmd: 'add-subscriber' })
   async addSubscriber(@Payload() subscriber: CreateSubscriberDto) {
     console.log('Add Sub called...');
     return await this.subscribersService.addSubscriber(subscriber);
   }
+
+  // @EventPattern({ cmd: 'add-subscriber' })
+  // async addSubscriber(@Payload() subscriber: CreateSubscriberDto) {
+  //   console.log('Add Sub called...');
+  //   return await this.subscribersService.addSubscriber(subscriber);
+  // }
 
   @MessagePattern({ cmd: 'get-all-subscribers' })
   async getAllSubscribers() {

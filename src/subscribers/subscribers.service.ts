@@ -11,26 +11,29 @@ export class SubscribersService {
     private readonly subscribersRepository: Repository<Subscriber>,
   ) {}
 
+  async checkEmail(email: string) {
+    const user = await this.subscribersRepository.findOneBy({
+      email,
+    });
+
+    return user;
+  }
+
   async getAllSubscribers() {
     return await this.subscribersRepository.find();
   }
 
   async addSubscriber(subscriber: CreateSubscriberDto) {
-    try {
+    const existing = await this.checkEmail(subscriber.email);
+
+    if (!existing) {
       const newSubscriber = await this.subscribersRepository.create(subscriber);
       await this.subscribersRepository.save(newSubscriber);
       return newSubscriber;
-    } catch (error) {
-      if (error?.code === '23505') {
-        return new HttpException(
-          'User with that email already exists.',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      return new HttpException(
-        'Something went wrong.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
+    return new HttpException(
+      'User with that email is already subscribed.',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
