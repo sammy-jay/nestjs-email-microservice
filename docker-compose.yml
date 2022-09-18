@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: postgres_emailer
+    image: postgres:14
+    ports:
+      - '5435:5432'
+    volumes:
+      - /data/postgres:/data/postgres
+    env_file:
+      - docker.env
+    networks:
+      - postgres_emailer
+networks:
+  postgres_emailer:
+    driver: bridge
