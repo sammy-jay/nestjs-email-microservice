@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { GrpcMethod } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
@@ -20,7 +21,8 @@ export class SubscribersService {
   }
 
   async getAllSubscribers() {
-    return await this.subscribersRepository.find();
+    const data = await this.subscribersRepository.find();
+    return { data };
   }
 
   async addSubscriber(subscriber: CreateSubscriberDto) {
@@ -31,9 +33,5 @@ export class SubscribersService {
       await this.subscribersRepository.save(newSubscriber);
       return newSubscriber;
     }
-    return new HttpException(
-      'User with that email is already subscribed.',
-      HttpStatus.BAD_REQUEST,
-    );
   }
 }
