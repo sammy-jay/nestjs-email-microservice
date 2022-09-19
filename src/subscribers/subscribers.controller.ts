@@ -1,19 +1,27 @@
 import { Controller } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 
-@Controller()
+@Controller('subscribers')
 export class SubscribersController {
   constructor(private readonly subscribersService: SubscribersService) {}
 
-  @GrpcMethod()
-  async addSubscriber(subscriber: CreateSubscriberDto) {
+  @MessagePattern({ cmd: 'add-subscriber' })
+  async addSubscriber(@Payload() subscriber: CreateSubscriberDto) {
+    console.log('Add Sub called...');
     return await this.subscribersService.addSubscriber(subscriber);
   }
 
-  @GrpcMethod()
+  // @EventPattern({ cmd: 'add-subscriber' })
+  // async addSubscriber(@Payload() subscriber: CreateSubscriberDto) {
+  //   console.log('Add Sub called...');
+  //   return await this.subscribersService.addSubscriber(subscriber);
+  // }
+
+  @MessagePattern({ cmd: 'get-all-subscribers' })
   async getAllSubscribers() {
+    console.log('Get All Subs called...');
     return await this.subscribersService.getAllSubscribers();
   }
 }
